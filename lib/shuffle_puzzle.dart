@@ -27,12 +27,12 @@ class ShufflePuzzle extends StatelessWidget {
                                   y: y,
                                   board: state.board,
                                   animateTo: (state is ShufflePuzzleAnimation)
-                                      ? (state as ShufflePuzzleAnimation).offset
+                                      ? state.offset
                                       : null,
-                                  animatedTile: (state
-                                          is ShufflePuzzleAnimation)
-                                      ? (state as ShufflePuzzleAnimation).tile
-                                      : null)
+                                  animatedTile:
+                                      (state is ShufflePuzzleAnimation)
+                                          ? state.tile
+                                          : null)
                         ])),
                   )
                 : Container();

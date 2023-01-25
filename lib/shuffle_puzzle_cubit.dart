@@ -77,11 +77,18 @@ class ShufflePuzzleCubit extends Cubit<AppState> {
 
   moveTile(PuzzleTile tile) {
     if (state is ShufflePuzzleInitialized) {
-      Offset emptyTile = findEmpty();
-      audioPlayer.play(AssetSource(
-          "zapsplat_foley_wood_blocks_small_slide_together_001_14091_short.mp3"));
+      Offset emptyTileOffset = findEmpty();
+      Offset currentTileOffset = findTile(tile);
+      final diffX = (emptyTileOffset.dx - currentTileOffset.dx).abs().toInt();
+      final diffY = (emptyTileOffset.dy - currentTileOffset.dy).abs().toInt();
+      if ((diffX == 1 && diffY == 0) ^ (diffY == 1 && diffX == 0)) {
+        audioPlayer.play(AssetSource(
+            "zapsplat_foley_wood_blocks_small_slide_together_001_14091_short.mp3"));
 
-      emit(ShufflePuzzleAnimation(board, tile, emptyTile));
+        emit(ShufflePuzzleAnimation(board, tile, emptyTileOffset));
+      } else {
+        audioPlayer.play(AssetSource('death.mp3'));
+      }
     }
   }
 
