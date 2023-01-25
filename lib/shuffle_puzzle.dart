@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:learning/game_scaffold.dart';
 import 'package:learning/puzzle/utils.dart';
 import 'package:learning/set_cubit.dart';
 import 'package:learning/shuffle_puzzle_cubit.dart';
@@ -13,73 +14,55 @@ class ShufflePuzzle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocProvider(
-        create: (context) => ShufflePuzzleCubit(width, shuffleType),
-        child: BlocBuilder<ShufflePuzzleCubit, AppState>(
-          builder: (context, state) {
-            return state is ShufflePuzzleInitialized
-                ? Stack(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return GameScaffold(
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final smallerSide = (constraints.maxWidth < constraints.maxHeight
+                  ? constraints.maxWidth
+                  : constraints.maxHeight) *
+              0.75;
+          final tileSize = smallerSide / width;
+          return BlocProvider(
+            create: (context) => ShufflePuzzleCubit(width, shuffleType),
+            child: BlocBuilder<ShufflePuzzleCubit, AppState>(
+              builder: (context, state) {
+                return state is ShufflePuzzleInitialized
+                    ? Stack(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(32),
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: Image.asset(
-                                "assets/back_button.png",
-                                width: 96,
+                          Center(
+                            child: SizedBox(
+                              width: smallerSide,
+                              height: smallerSide,
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  for (int x = 0; x < width; x++)
+                                    for (int y = 0; y < width; y++)
+                                      PositionedPuzzleTile(
+                                        x: x,
+                                        y: y,
+                                        i: tileSize,
+                                        board: state.board,
+                                        animateTo:
+                                            (state is ShufflePuzzleAnimation)
+                                                ? state.offset
+                                                : null,
+                                        animatedTile:
+                                            (state is ShufflePuzzleAnimation)
+                                                ? state.tile
+                                                : null,
+                                      )
+                                ],
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(32),
-                            child: InkWell(
-                              onTap: () {
-                                //context.read<ShufflePuzzleCubit>()
-                              },
-                              child: Image.asset(
-                                "assets/help_button.png",
-                                width: 96,
-                              ),
-                            ),
-                          )
                         ],
-                      ),
-                      Center(
-                        child: SizedBox(
-                          width: 600,
-                          height: 620,
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              for (int x = 0; x < width; x++)
-                                for (int y = 0; y < width; y++)
-                                  PositionedPuzzleTile(
-                                      x: x,
-                                      y: y,
-                                      board: state.board,
-                                      animateTo:
-                                          (state is ShufflePuzzleAnimation)
-                                              ? state.offset
-                                              : null,
-                                      animatedTile:
-                                          (state is ShufflePuzzleAnimation)
-                                              ? state.tile
-                                              : null)
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                : Container();
-          },
-        ),
+                      )
+                    : Container();
+              },
+            ),
+          );
+        },
       ),
     );
   }
@@ -89,39 +72,37 @@ class PositionedPuzzleTile extends StatelessWidget {
   final int x;
   final int y;
   final List<List<PuzzleTile>> board;
-  static double widthTile = 150;
+  final double i;
   final PuzzleTile? animatedTile;
   final Offset? animateTo;
 
-  PositionedPuzzleTile(
-      {super.key,
-      required this.x,
-      required this.y,
-      required this.board,
-      this.animateTo,
-      this.animatedTile});
+  PositionedPuzzleTile({
+    super.key,
+    required this.x,
+    required this.y,
+    required this.board,
+    required this.i,
+    this.animateTo,
+    this.animatedTile,
+  });
 
   @override
   Widget build(BuildContext context) {
     PuzzleTile tile = board[x][y];
     if (tile.isEmpty) {
       return Positioned(
-          left: widthTile * x,
-          top: widthTile * y,
-          width: widthTile,
-          height: widthTile,
-          child: Container());
+          left: i * x, top: i * y, width: i, height: i, child: Container());
     } else {
       return AnimatedPositioned(
         duration: Duration(milliseconds: 300),
         left: tile == animatedTile && animateTo != null
-            ? widthTile * animateTo!.dx
-            : widthTile * x,
+            ? i * animateTo!.dx
+            : i * x,
         top: tile == animatedTile && animateTo != null
-            ? widthTile * animateTo!.dy
-            : widthTile * y,
-        width: widthTile,
-        height: widthTile,
+            ? i * animateTo!.dy
+            : i * y,
+        width: i,
+        height: i,
         onEnd: () {
           context.read<ShufflePuzzleCubit>().animationDone();
         },

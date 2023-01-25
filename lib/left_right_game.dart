@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:learning/game_scaffold.dart';
 import 'package:learning/set_cubit.dart';
 
 class LeftRightGame extends StatefulWidget {
@@ -17,7 +18,7 @@ int columns = 5;
 class _LeftRightGameState extends State<LeftRightGame> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GameScaffold(
       body: BlocProvider(
         create: (context) => SetCubit(rows * columns, 2),
         child: BlocBuilder<SetCubit, AppState>(
