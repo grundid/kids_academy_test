@@ -92,7 +92,6 @@ class PositionedPuzzleTile extends StatelessWidget {
   final int x;
   final int y;
   final List<List<PuzzleTile>> board;
-  static double widthTile = 150;
   final PuzzleTile? animatedTile;
   final Offset? animateTo;
   final bool helpMode;
@@ -108,6 +107,7 @@ class PositionedPuzzleTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double widthTile = 600 / board.length;
     PuzzleTile tile = board[x][y];
 
     int posX = helpMode ? tile.correctPosX : x;
