@@ -4,7 +4,9 @@ class GameScaffold extends StatelessWidget {
   const GameScaffold({
     super.key,
     required this.body,
+    this.actions,
   });
+  final List<Widget>? actions;
   final Widget body;
 
   @override
@@ -30,18 +32,7 @@ class GameScaffold extends StatelessWidget {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(32),
-                  child: InkWell(
-                    onTap: () {
-                      //context.read<ShufflePuzzleCubit>()
-                    },
-                    child: Image.asset(
-                      "assets/help_button.png",
-                      width: 96,
-                    ),
-                  ),
-                )
+                if (actions != null) ...actions!
               ],
             ),
           ),

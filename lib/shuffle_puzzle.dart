@@ -14,17 +14,33 @@ class ShufflePuzzle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GameScaffold(
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          final smallerSide = (constraints.maxWidth < constraints.maxHeight
-                  ? constraints.maxWidth
-                  : constraints.maxHeight) *
-              0.75;
-          final tileSize = smallerSide / width;
-          return BlocProvider(
-            create: (context) => ShufflePuzzleCubit(width, shuffleType),
-            child: BlocBuilder<ShufflePuzzleCubit, AppState>(
+    return BlocProvider(
+      create: (context) => ShufflePuzzleCubit(width, shuffleType),
+      child: GameScaffold(
+        actions: [
+          Builder(builder: (context) {
+            return Padding(
+              padding: const EdgeInsets.all(32),
+              child: InkWell(
+                onTap: () {
+                  context.read<ShufflePuzzleCubit>().toggleHelpMode();
+                },
+                child: Image.asset(
+                  "assets/help_button.png",
+                  width: 96,
+                ),
+              ),
+            );
+          })
+        ],
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            final smallerSide = (constraints.maxWidth < constraints.maxHeight
+                    ? constraints.maxWidth
+                    : constraints.maxHeight) *
+                0.75;
+            final tileSize = smallerSide / width;
+            return BlocBuilder<ShufflePuzzleCubit, AppState>(
               builder: (context, state) {
                 return state is ShufflePuzzleInitialized
                     ? Stack(children: [
@@ -73,9 +89,9 @@ class ShufflePuzzle extends StatelessWidget {
                       ])
                     : Container();
               },
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
