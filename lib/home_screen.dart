@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:learning/left_right_game.dart';
+import 'package:learning/shuffle_puzzle.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -31,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => Container(),
+                  builder: (_) => ShufflePuzzle(),
                 ),
               );
             },
