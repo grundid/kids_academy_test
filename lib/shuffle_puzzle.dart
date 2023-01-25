@@ -27,21 +27,22 @@ class ShufflePuzzle extends StatelessWidget {
             child: BlocBuilder<ShufflePuzzleCubit, AppState>(
               builder: (context, state) {
                 return state is ShufflePuzzleInitialized
-                    ? Stack(
-                        children: [
-                          Center(
-                            child: SizedBox(
-                              width: smallerSide,
-                              height: smallerSide,
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  for (int x = 0; x < width; x++)
-                                    for (int y = 0; y < width; y++)
-                                      PositionedPuzzleTile(
+                    ? Stack(children: [
+                        Center(
+                          child: SizedBox(
+                            width: smallerSide,
+                            height: smallerSide,
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                for (int x = 0; x < width; x++)
+                                  for (int y = 0; y < width; y++)
+                                    PositionedPuzzleTile(
+                                        tileSize: tileSize,
                                         x: x,
                                         y: y,
-                                        i: tileSize,
+                                        helpMode:
+                                            state is ShufflePuzzleHelpState,
                                         board: state.board,
                                         animateTo:
                                             (state is ShufflePuzzleAnimation)
@@ -50,14 +51,26 @@ class ShufflePuzzle extends StatelessWidget {
                                         animatedTile:
                                             (state is ShufflePuzzleAnimation)
                                                 ? state.tile
-                                                : null,
-                                      )
-                                ],
-                              ),
+                                                : null),
+                              ],
                             ),
                           ),
-                        ],
-                      )
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(32),
+                          child: InkWell(
+                            onTap: () {
+                              context
+                                  .read<ShufflePuzzleCubit>()
+                                  .toggleHelpMode();
+                            },
+                            child: Image.asset(
+                              "assets/help_button.png",
+                              width: 96,
+                            ),
+                          ),
+                        ),
+                      ])
                     : Container();
               },
             ),
@@ -72,16 +85,18 @@ class PositionedPuzzleTile extends StatelessWidget {
   final int x;
   final int y;
   final List<List<PuzzleTile>> board;
-  final double i;
+  final double tileSize;
   final PuzzleTile? animatedTile;
   final Offset? animateTo;
+  final bool helpMode;
 
   PositionedPuzzleTile({
     super.key,
     required this.x,
     required this.y,
     required this.board,
-    required this.i,
+    required this.helpMode,
+    required this.tileSize,
     this.animateTo,
     this.animatedTile,
   });
@@ -89,26 +104,42 @@ class PositionedPuzzleTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     PuzzleTile tile = board[x][y];
+
+    int posX = helpMode ? tile.correctPosX : x;
+    int posY = helpMode ? tile.correctPosY : y;
+
+    print(
+        "helpMode: $helpMode, X/Y: $x/$y, correct X/Y: ${tile.correctPosX}/${tile.correctPosY}");
+
     if (tile.isEmpty) {
       return Positioned(
-          left: i * x, top: i * y, width: i, height: i, child: Container());
+        left: tileSize * posX,
+        top: tileSize * posY,
+        width: tileSize,
+        height: tileSize,
+        child: Container(),
+      );
     } else {
       return AnimatedPositioned(
         duration: Duration(milliseconds: 300),
         left: tile == animatedTile && animateTo != null
-            ? i * animateTo!.dx
-            : i * x,
+            ? tileSize * animateTo!.dx
+            : tileSize * posX,
         top: tile == animatedTile && animateTo != null
-            ? i * animateTo!.dy
-            : i * y,
-        width: i,
-        height: i,
+            ? tileSize * animateTo!.dy
+            : tileSize * posY,
+        width: tileSize,
+        height: tileSize,
         onEnd: () {
           context.read<ShufflePuzzleCubit>().animationDone();
         },
         child: InkWell(
           onTap: () {
-            context.read<ShufflePuzzleCubit>().moveTile(tile);
+            if (helpMode) {
+              context.read<ShufflePuzzleCubit>().toggleHelpMode();
+            } else {
+              context.read<ShufflePuzzleCubit>().moveTile(tile);
+            }
           },
           child: tile.widget,
         ),
