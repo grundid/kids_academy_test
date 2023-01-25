@@ -69,7 +69,7 @@ class NumberPuzzleGameCreator {
 
   NumberPuzzleGameCreator(this.width);
 
-  PuzzleGame createGame() {
+  Future<PuzzleGame> createGame() async {
     int elements = width * width;
     PuzzleBoard board = List.generate(width, (index) => <PuzzleTile>[]);
     Random random = Random(DateTime.now().microsecond);

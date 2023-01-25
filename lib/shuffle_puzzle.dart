@@ -5,36 +5,77 @@ import 'package:learning/set_cubit.dart';
 import 'package:learning/shuffle_puzzle_cubit.dart';
 
 class ShufflePuzzle extends StatelessWidget {
-  const ShufflePuzzle({super.key});
+  final ShuffleType shuffleType;
+  final int width;
+
+  const ShufflePuzzle(
+      {super.key, required this.shuffleType, required this.width});
 
   @override
   Widget build(BuildContext context) {
-    int width = 3;
     return Scaffold(
       body: BlocProvider(
-        create: (context) => ShufflePuzzleCubit(width),
+        create: (context) => ShufflePuzzleCubit(width, shuffleType),
         child: BlocBuilder<ShufflePuzzleCubit, AppState>(
           builder: (context, state) {
             return state is ShufflePuzzleInitialized
-                ? Center(
-                    child: SizedBox(
-                        width: 600,
-                        height: 620,
-                        child: Stack(alignment: Alignment.center, children: [
-                          for (int x = 0; x < width; x++)
-                            for (int y = 0; y < width; y++)
-                              PositionedPuzzleTile(
-                                  x: x,
-                                  y: y,
-                                  board: state.board,
-                                  animateTo: (state is ShufflePuzzleAnimation)
-                                      ? state.offset
-                                      : null,
-                                  animatedTile:
-                                      (state is ShufflePuzzleAnimation)
-                                          ? state.tile
-                                          : null)
-                        ])),
+                ? Stack(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(32),
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Image.asset(
+                                "assets/back_button.png",
+                                width: 96,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(32),
+                            child: InkWell(
+                              onTap: () {
+                                //context.read<ShufflePuzzleCubit>()
+                              },
+                              child: Image.asset(
+                                "assets/help_button.png",
+                                width: 96,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      Center(
+                        child: SizedBox(
+                          width: 600,
+                          height: 620,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              for (int x = 0; x < width; x++)
+                                for (int y = 0; y < width; y++)
+                                  PositionedPuzzleTile(
+                                      x: x,
+                                      y: y,
+                                      board: state.board,
+                                      animateTo:
+                                          (state is ShufflePuzzleAnimation)
+                                              ? state.offset
+                                              : null,
+                                      animatedTile:
+                                          (state is ShufflePuzzleAnimation)
+                                              ? state.tile
+                                              : null)
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   )
                 : Container();
           },

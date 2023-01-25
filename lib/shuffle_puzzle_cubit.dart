@@ -17,20 +17,30 @@ class ShufflePuzzleAnimation extends ShufflePuzzleInitialized {
   ShufflePuzzleAnimation(super.board, this.tile, this.offset);
 }
 
+enum ShuffleType { number, image }
+
 class ShufflePuzzleCubit extends Cubit<AppState> {
   late PuzzleGame puzzleGame;
+  final ShuffleType shuffleType;
   final AudioPlayer audioPlayer = AudioPlayer();
 
-  ShufflePuzzleCubit(int width) : super(InProgressState()) {
+  ShufflePuzzleCubit(int width, this.shuffleType) : super(InProgressState()) {
     _init(width);
   }
 
   _init(int width) async {
-    ImagePuzzleGameCreator creator =
-        ImagePuzzleGameCreator(width, "assets/puppy-2785074_1920.jpg");
-    puzzleGame = await creator.createGame();
+    if (shuffleType == ShuffleType.image) {
+      ImagePuzzleGameCreator creator =
+          ImagePuzzleGameCreator(width, "assets/puppy-2785074_1920.jpg");
+      puzzleGame = await creator.createGame();
 
-    emit(ShufflePuzzleInitialized(puzzleGame.board));
+      emit(ShufflePuzzleInitialized(puzzleGame.board));
+    } else {
+      NumberPuzzleGameCreator creator = NumberPuzzleGameCreator(width);
+      puzzleGame = await creator.createGame();
+
+      emit(ShufflePuzzleInitialized(puzzleGame.board));
+    }
   }
 
   moveTile(PuzzleTile tile) {
