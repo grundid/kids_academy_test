@@ -22,8 +22,13 @@ class ShufflePuzzleCubit extends Cubit<AppState> {
   final AudioPlayer audioPlayer = AudioPlayer();
 
   ShufflePuzzleCubit(int width) : super(InProgressState()) {
-    NumberPuzzleGameCreator creator = NumberPuzzleGameCreator(width);
-    puzzleGame = creator.createGame();
+    _init(width);
+  }
+
+  _init(int width) async {
+    ImagePuzzleGameCreator creator =
+        ImagePuzzleGameCreator(width, "assets/puppy-2785074_1920.jpg");
+    puzzleGame = await creator.createGame();
 
     emit(ShufflePuzzleInitialized(puzzleGame.board));
   }

@@ -9,10 +9,10 @@ class ShufflePuzzle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int width = 4;
+    int width = 3;
     return Scaffold(
       body: BlocProvider(
-        create: (context) => ShufflePuzzleCubit(4),
+        create: (context) => ShufflePuzzleCubit(width),
         child: BlocBuilder<ShufflePuzzleCubit, AppState>(
           builder: (context, state) {
             return state is ShufflePuzzleInitialized
