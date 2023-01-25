@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:learning/puzzle/utils.dart';
 import 'package:learning/set_cubit.dart';
 import 'package:learning/shuffle_puzzle_cubit.dart';
 
@@ -87,16 +88,7 @@ class PositionedPuzzleTile extends StatelessWidget {
           onTap: () {
             context.read<ShufflePuzzleCubit>().moveTile(tile);
           },
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Image.asset("assets/woodtile.png"),
-              Text(
-                tile.content,
-                style: TextStyle(color: Colors.white, fontSize: 64),
-              )
-            ],
-          ),
+          child: tile.widget,
         ),
       );
     }

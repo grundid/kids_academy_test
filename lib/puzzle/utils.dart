@@ -16,6 +16,42 @@ typedef PuzzleBoard = List<List<PuzzleTile>>;
 class PuzzleGame {
   final PuzzleBoard board;
   PuzzleGame(this.board);
+
+  void moveTile(PuzzleTile tile) {
+    Offset emptyTileOffset = findEmpty();
+    Offset tileOffset = findTile(tile);
+
+    PuzzleTile emptyTile =
+        board[emptyTileOffset.dx.toInt()][emptyTileOffset.dy.toInt()];
+    board[emptyTileOffset.dx.toInt()][emptyTileOffset.dy.toInt()] = tile;
+    board[tileOffset.dx.toInt()][tileOffset.dy.toInt()] = emptyTile;
+  }
+
+  Offset findEmpty() {
+    for (int x = 0; x < board.length; x++) {
+      List<PuzzleTile> line = board[x];
+      for (int y = 0; y < line.length; y++) {
+        PuzzleTile tile = line[y];
+        if (tile.isEmpty) {
+          return Offset(x.toDouble(), y.toDouble());
+        }
+      }
+    }
+    throw Exception("cannot happen");
+  }
+
+  Offset findTile(PuzzleTile tileToFind) {
+    for (int x = 0; x < board.length; x++) {
+      List<PuzzleTile> line = board[x];
+      for (int y = 0; y < line.length; y++) {
+        PuzzleTile tile = line[y];
+        if (tile == tileToFind) {
+          return Offset(x.toDouble(), y.toDouble());
+        }
+      }
+    }
+    throw Exception("cannot happen");
+  }
 }
 
 class TilePosition<T> {
