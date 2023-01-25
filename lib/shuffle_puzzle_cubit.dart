@@ -17,12 +17,17 @@ class ShufflePuzzleAnimation extends ShufflePuzzleInitialized {
   ShufflePuzzleAnimation(super.board, this.tile, this.offset);
 }
 
+class ShufflePuzzleHelpState extends ShufflePuzzleInitialized {
+  ShufflePuzzleHelpState(super.board);
+}
+
 enum ShuffleType { number, image }
 
 class ShufflePuzzleCubit extends Cubit<AppState> {
   late PuzzleGame puzzleGame;
   final ShuffleType shuffleType;
   final AudioPlayer audioPlayer = AudioPlayer();
+  bool helpMode = false;
 
   ShufflePuzzleCubit(int width, this.shuffleType) : super(InProgressState()) {
     _init(width);
@@ -64,6 +69,19 @@ class ShufflePuzzleCubit extends Cubit<AppState> {
     if (state is ShufflePuzzleAnimation) {
       ShufflePuzzleAnimation myState = state as ShufflePuzzleAnimation;
       puzzleGame.moveTile(myState.tile);
+      if (puzzleGame.isComplete()) {
+        audioPlayer
+            .play(AssetSource("human_crowd_25_people_cheer_shout_yay.mp3"));
+      }
+      emit(ShufflePuzzleInitialized(puzzleGame.board));
+    }
+  }
+
+  void toggleHelpMode() {
+    helpMode = !helpMode;
+    if (helpMode) {
+      emit(ShufflePuzzleHelpState(puzzleGame.board));
+    } else {
       emit(ShufflePuzzleInitialized(puzzleGame.board));
     }
   }

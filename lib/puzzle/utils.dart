@@ -11,6 +11,8 @@ class PuzzleTile {
   final int correctPosY;
 
   PuzzleTile(this.widget, this.isEmpty, this.correctPosX, this.correctPosY);
+
+  bool isCorrect(int x, int y) => correctPosX == x && correctPosY == y;
 }
 
 typedef PuzzleBoard = List<List<PuzzleTile>>;
@@ -18,6 +20,19 @@ typedef PuzzleBoard = List<List<PuzzleTile>>;
 class PuzzleGame {
   final PuzzleBoard board;
   PuzzleGame(this.board);
+
+  bool isComplete() {
+    for (int x = 0; x < board.length; x++) {
+      List<PuzzleTile> line = board[x];
+      for (int y = 0; y < line.length; y++) {
+        PuzzleTile tile = line[y];
+        if (!tile.isCorrect(x, y)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
 
   void moveTile(PuzzleTile tile) {
     Offset emptyTileOffset = findEmpty();
@@ -75,8 +90,8 @@ class NumberPuzzleGameCreator {
     Random random = Random(DateTime.now().microsecond);
     List<TilePosition<int>> numbers = List.generate(elements - 1, (index) {
       int value = index + 1;
-      int posX = index ~/ width;
-      int posY = index % width;
+      int posX = index % width;
+      int posY = index ~/ width;
       return TilePosition(value, posX, posY);
     });
 
@@ -99,8 +114,8 @@ class NumberPuzzleGameCreator {
                 ],
               ),
               false,
-              x,
-              y));
+              tilePosition.posX,
+              tilePosition.posY));
         } else {
           line.add(PuzzleTile(Container(), true, width - 1, width - 1));
         }
@@ -148,8 +163,8 @@ class ImagePuzzleGameCreator {
     Random random = Random(DateTime.now().microsecond);
     List<TilePosition<Uint8List>> numbers =
         List.generate(elements - 1, (index) {
-      int posX = index ~/ width;
-      int posY = index % width;
+      int posY = index ~/ width;
+      int posX = index % width;
 
       img.Image value = img.copyCrop(image!,
           x: posX * tileWidth,
@@ -173,8 +188,8 @@ class ImagePuzzleGameCreator {
                 children: [Image.memory(tilePosition.value)],
               ),
               false,
-              x,
-              y));
+              tilePosition.posX,
+              tilePosition.posY));
         } else {
           line.add(PuzzleTile(Container(), true, width - 1, width - 1));
         }

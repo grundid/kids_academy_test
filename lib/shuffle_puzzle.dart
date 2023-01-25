@@ -40,7 +40,9 @@ class ShufflePuzzle extends StatelessWidget {
                             padding: const EdgeInsets.all(32),
                             child: InkWell(
                               onTap: () {
-                                //context.read<ShufflePuzzleCubit>()
+                                context
+                                    .read<ShufflePuzzleCubit>()
+                                    .toggleHelpMode();
                               },
                               child: Image.asset(
                                 "assets/help_button.png",
@@ -62,6 +64,7 @@ class ShufflePuzzle extends StatelessWidget {
                                   PositionedPuzzleTile(
                                       x: x,
                                       y: y,
+                                      helpMode: state is ShufflePuzzleHelpState,
                                       board: state.board,
                                       animateTo:
                                           (state is ShufflePuzzleAnimation)
@@ -92,22 +95,31 @@ class PositionedPuzzleTile extends StatelessWidget {
   static double widthTile = 150;
   final PuzzleTile? animatedTile;
   final Offset? animateTo;
+  final bool helpMode;
 
   PositionedPuzzleTile(
       {super.key,
       required this.x,
       required this.y,
       required this.board,
+      required this.helpMode,
       this.animateTo,
       this.animatedTile});
 
   @override
   Widget build(BuildContext context) {
     PuzzleTile tile = board[x][y];
+
+    int posX = helpMode ? tile.correctPosX : x;
+    int posY = helpMode ? tile.correctPosY : y;
+
+    print(
+        "helpMode: $helpMode, X/Y: $x/$y, correct X/Y: ${tile.correctPosX}/${tile.correctPosY}");
+
     if (tile.isEmpty) {
       return Positioned(
-          left: widthTile * x,
-          top: widthTile * y,
+          left: widthTile * posX,
+          top: widthTile * posY,
           width: widthTile,
           height: widthTile,
           child: Container());
@@ -116,10 +128,10 @@ class PositionedPuzzleTile extends StatelessWidget {
         duration: Duration(milliseconds: 300),
         left: tile == animatedTile && animateTo != null
             ? widthTile * animateTo!.dx
-            : widthTile * x,
+            : widthTile * posX,
         top: tile == animatedTile && animateTo != null
             ? widthTile * animateTo!.dy
-            : widthTile * y,
+            : widthTile * posY,
         width: widthTile,
         height: widthTile,
         onEnd: () {
@@ -127,7 +139,11 @@ class PositionedPuzzleTile extends StatelessWidget {
         },
         child: InkWell(
           onTap: () {
-            context.read<ShufflePuzzleCubit>().moveTile(tile);
+            if (helpMode) {
+              context.read<ShufflePuzzleCubit>().toggleHelpMode();
+            } else {
+              context.read<ShufflePuzzleCubit>().moveTile(tile);
+            }
           },
           child: tile.widget,
         ),
