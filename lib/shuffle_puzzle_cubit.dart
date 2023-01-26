@@ -27,13 +27,19 @@ class ShufflePuzzleCubit extends Cubit<AppState> {
   late PuzzleGame puzzleGame;
   final ShuffleType shuffleType;
   final AudioPlayer audioPlayer = AudioPlayer();
+  final int width;
   bool helpMode = false;
 
-  ShufflePuzzleCubit(int width, this.shuffleType) : super(InProgressState()) {
-    _init(width);
+  ShufflePuzzleCubit(this.width, this.shuffleType) : super(InProgressState()) {
+    _init();
   }
 
-  _init(int width) async {
+  _init() async {
+    await Future.delayed(Duration(milliseconds: 500));
+    initGame();
+  }
+
+  initGame() async {
     if (shuffleType == ShuffleType.image) {
       ImagePuzzleGameCreator creator =
           ImagePuzzleGameCreator(width, "assets/puppy-2785074_1920.jpg");
@@ -84,5 +90,12 @@ class ShufflePuzzleCubit extends Cubit<AppState> {
     } else {
       emit(ShufflePuzzleInitialized(puzzleGame.board));
     }
+  }
+
+  void resetGame() async {
+    emit(InProgressState());
+    await initGame();
+    helpMode = false;
+    emit(ShufflePuzzleInitialized(puzzleGame.board));
   }
 }

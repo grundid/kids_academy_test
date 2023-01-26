@@ -23,6 +23,20 @@ class ShufflePuzzle extends StatelessWidget {
               padding: const EdgeInsets.all(32),
               child: InkWell(
                 onTap: () {
+                  context.read<ShufflePuzzleCubit>().resetGame();
+                },
+                child: Image.asset(
+                  "assets/reset_button.png",
+                  width: 96,
+                ),
+              ),
+            );
+          }),
+          Builder(builder: (context) {
+            return Padding(
+              padding: const EdgeInsets.all(32),
+              child: InkWell(
+                onTap: () {
                   context.read<ShufflePuzzleCubit>().toggleHelpMode();
                 },
                 child: Image.asset(
@@ -87,7 +101,7 @@ class ShufflePuzzle extends StatelessWidget {
                           ),
                         ),
                       ])
-                    : Container();
+                    : Center(child: CircularProgressIndicator());
               },
             );
           },
