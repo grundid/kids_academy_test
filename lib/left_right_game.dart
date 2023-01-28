@@ -5,17 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:learning/game_scaffold.dart';
 import 'package:learning/set_cubit.dart';
 
-class LeftRightGame extends StatefulWidget {
-  const LeftRightGame({super.key});
-
-  @override
-  State<LeftRightGame> createState() => _LeftRightGameState();
-}
-
 int rows = 7;
 int columns = 5;
 
-class _LeftRightGameState extends State<LeftRightGame> {
+class LeftRightGame extends StatelessWidget {
+  const LeftRightGame({super.key});
+
   @override
   Widget build(BuildContext context) {
     return GameScaffold(

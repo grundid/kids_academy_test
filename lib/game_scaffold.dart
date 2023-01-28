@@ -14,7 +14,6 @@ class GameScaffold extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          Image.asset("assets/2210_w026_n002_2560b_p1_2560.jpg"),
           body,
           Align(
             alignment: Alignment.topCenter,
