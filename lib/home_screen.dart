@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:learning/left_right_game.dart';
-import 'package:learning/shuffle_puzzle.dart';
-import 'package:learning/shuffle_puzzle_cubit.dart';
+import 'package:learning/puzzle/shuffle_puzzle.dart';
+import 'package:learning/puzzle/shuffle_puzzle_cubit.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
