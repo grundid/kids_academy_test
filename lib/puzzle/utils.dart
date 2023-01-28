@@ -1,3 +1,4 @@
+import 'dart:isolate';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -154,7 +155,9 @@ class ImagePuzzleGameCreator {
 
   Future<PuzzleGame> createGame() async {
     ByteData imageData = await rootBundle.load(imageFilename);
-    img.Image? image = img.decodeImage(imageData.buffer.asUint8List());
+    img.Image? image = await Isolate.run(() {
+      return img.decodeImage(imageData.buffer.asUint8List());
+    });
     int imageWidth = 1024;
     int tileWidth = 1024 ~/ width;
 
@@ -171,7 +174,7 @@ class ImagePuzzleGameCreator {
           y: posY * tileWidth,
           width: tileWidth,
           height: tileWidth);
-      ;
+
       return TilePosition(img.encodePng(value), posX, posY);
     });
 
