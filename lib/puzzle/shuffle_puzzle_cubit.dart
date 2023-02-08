@@ -2,7 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:learning/puzzle/utils.dart';
-import 'package:learning/set_cubit.dart';
+import 'package:learning/utils/bloc_utils.dart';
 
 class ShufflePuzzleInitialized extends AppState {
   final PuzzleBoard board;

@@ -1,16 +1,19 @@
-# learning
+# ideen
 
-A new Flutter project.
+mengenlehre:
+- zeige eine menge an objekten und lass den user die anzahl eingeben
+- die menge sollte immer in einem muster sein (drei hintereinander, als L, quadrat usw)
+- die menge als summe von zwei mustern 
 
-## Getting Started
+memory:
+- memory mit tieren, die später im schiebe puzzle verwendet werden
+- memory mit symbolen (dreiecke, quadrate, kreise, sterne) in versch. farben
+- memory mit symbolen, die aus zwei farben bestehen
+- memory mit Großbuchstaben
+- mit Groß- und Kleinbuchstaben
+- memory mit mengen
+- mit summen von mengen
+- mit summen von zahlen
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+hunderterbrett:
+- 

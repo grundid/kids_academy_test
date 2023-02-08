@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:learning/left_right_game.dart';
+import 'package:learning/memory/memory_game.dart';
 import 'package:learning/puzzle/shuffle_puzzle.dart';
 import 'package:learning/puzzle/shuffle_puzzle_cubit.dart';
 
@@ -65,6 +66,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     MaterialPageRoute(
                       builder: (_) => ShufflePuzzle(
                           width: 3, shuffleType: ShuffleType.image),
+                    ),
+                  );
+                },
+              ),
+              MenuTile(
+                text: "Memory",
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => MemoryGameWidget(),
                     ),
                   );
                 },

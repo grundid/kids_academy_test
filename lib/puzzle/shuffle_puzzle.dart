@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:learning/game_scaffold.dart';
 import 'package:learning/puzzle/shuffle_puzzle_cubit.dart';
 import 'package:learning/puzzle/utils.dart';
-import 'package:learning/set_cubit.dart';
+import 'package:learning/utils/bloc_utils.dart';
 
 class ShufflePuzzle extends StatelessWidget {
   final ShuffleType shuffleType;

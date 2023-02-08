@@ -155,49 +155,50 @@ class ImagePuzzleGameCreator {
 
   Future<PuzzleGame> createGame() async {
     ByteData imageData = await rootBundle.load(imageFilename);
-    img.Image? image = await Isolate.run(() {
-      return img.decodeImage(imageData.buffer.asUint8List());
-    });
-    int imageWidth = 1024;
-    int tileWidth = 1024 ~/ width;
+    return Isolate.run(() async {
+      img.Image? image = img.decodeImage(imageData.buffer.asUint8List());
 
-    int elements = width * width;
-    PuzzleBoard board = List.generate(width, (index) => <PuzzleTile>[]);
-    Random random = Random(DateTime.now().microsecond);
-    List<TilePosition<Uint8List>> numbers =
-        List.generate(elements - 1, (index) {
-      int posY = index ~/ width;
-      int posX = index % width;
+      int imageWidth = 1024;
+      int tileWidth = 1024 ~/ width;
 
-      img.Image value = img.copyCrop(image!,
-          x: posX * tileWidth,
-          y: posY * tileWidth,
-          width: tileWidth,
-          height: tileWidth);
+      int elements = width * width;
+      PuzzleBoard board = List.generate(width, (index) => <PuzzleTile>[]);
+      Random random = Random(DateTime.now().microsecond);
+      List<TilePosition<Uint8List>> numbers =
+          List.generate(elements - 1, (index) {
+        int posY = index ~/ width;
+        int posX = index % width;
 
-      return TilePosition(img.encodePng(value), posX, posY);
-    });
+        img.Image value = img.copyCrop(image!,
+            x: posX * tileWidth,
+            y: posY * tileWidth,
+            width: tileWidth,
+            height: tileWidth);
 
-    for (int x = 0; x < width; x++) {
-      List<PuzzleTile> line = board[x];
-      for (int y = 0; y < width; y++) {
-        if (numbers.isNotEmpty) {
-          TilePosition<Uint8List> tilePosition =
-              numbers.removeAt(random.nextInt(numbers.length));
+        return TilePosition(img.encodePng(value), posX, posY);
+      });
 
-          line.add(PuzzleTile(
-              Stack(
-                alignment: Alignment.center,
-                children: [Image.memory(tilePosition.value)],
-              ),
-              false,
-              tilePosition.posX,
-              tilePosition.posY));
-        } else {
-          line.add(PuzzleTile(Container(), true, width - 1, width - 1));
+      for (int x = 0; x < width; x++) {
+        List<PuzzleTile> line = board[x];
+        for (int y = 0; y < width; y++) {
+          if (numbers.isNotEmpty) {
+            TilePosition<Uint8List> tilePosition =
+                numbers.removeAt(random.nextInt(numbers.length));
+
+            line.add(PuzzleTile(
+                Stack(
+                  alignment: Alignment.center,
+                  children: [Image.memory(tilePosition.value)],
+                ),
+                false,
+                tilePosition.posX,
+                tilePosition.posY));
+          } else {
+            line.add(PuzzleTile(Container(), true, width - 1, width - 1));
+          }
         }
       }
-    }
-    return PuzzleGame(board);
+      return PuzzleGame(board);
+    });
   }
 }
