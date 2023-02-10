@@ -17,13 +17,16 @@ class MemoryCubit extends Cubit<AppState> {
   final int ySize;
   late MemoryField memoryField;
   late Timer? timer;
-  final AudioPlayer audioPlayer = AudioPlayer();
+  final AudioPlayer hitAudioPlayer = AudioPlayer();
+  final AudioPlayer cheerAudioPlayer = AudioPlayer();
 
   bool showFailedGuess = false;
 
   MemoryCubit(this.xSize, this.ySize) : super(InProgressState()) {
     memoryField = MemoryField(xSize: xSize, ySize: ySize);
     emit(MemoryInitialized(memoryField, true));
+    hitAudioPlayer.setSourceAsset(
+        "zapsplat_multimedia_game_sound_fun_magic_game_positive_bonus_award_level_up_001_61001.mp3");
   }
 
   reset() {
@@ -60,7 +63,8 @@ class MemoryCubit extends Cubit<AppState> {
     if (true == timer?.isActive) {
       timer!.cancel();
     }
-    audioPlayer.dispose();
+    hitAudioPlayer.dispose();
+    cheerAudioPlayer.dispose();
     return super.close();
   }
 
@@ -94,10 +98,9 @@ class MemoryCubit extends Cubit<AppState> {
         solved = true;
         openFields.first.solved = true;
         openFields.last.solved = true;
-        await audioPlayer.stop();
-        audioPlayer.play(AssetSource(
-          "zapsplat_multimedia_game_sound_fun_magic_game_positive_bonus_award_level_up_001_61001.mp3",
-        ));
+        await hitAudioPlayer.stop();
+        hitAudioPlayer.play(AssetSource(
+            "zapsplat_multimedia_game_sound_fun_magic_game_positive_bonus_award_level_up_001_61001.mp3"));
       } else {
         showFailedGuess = true;
         timer = Timer(Duration(seconds: 2), () {
@@ -106,7 +109,7 @@ class MemoryCubit extends Cubit<AppState> {
       }
     }
     if (countSolved() == xSize * ySize) {
-      audioPlayer
+      cheerAudioPlayer
           .play(AssetSource("human_crowd_25_people_cheer_shout_yay.mp3"));
     }
 

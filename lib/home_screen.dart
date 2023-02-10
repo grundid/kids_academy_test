@@ -102,13 +102,16 @@ class MenuTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      child: Stack(alignment: Alignment.center, children: [
-        Image.asset("assets/menu_tile.png"),
-        Text(
-          text,
-          style: TextStyle(color: Colors.white, fontSize: 32),
-        ),
-      ]),
+      child: SizedBox(
+        height: 120,
+        child: Stack(alignment: Alignment.center, children: [
+          Image.asset("assets/menu_tile.png"),
+          Text(
+            text,
+            style: TextStyle(color: Colors.white, fontSize: 32),
+          ),
+        ]),
+      ),
     );
   }
 }
