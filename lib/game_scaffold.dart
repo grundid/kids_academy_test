@@ -13,11 +13,12 @@ class GameScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
+        alignment: Alignment.center,
         children: [
           body,
           Align(
-            alignment: Alignment.topCenter,
-            child: Row(
+            alignment: Alignment.topLeft,
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
@@ -28,17 +29,20 @@ class GameScaffold extends StatelessWidget {
                     },
                     child: Image.asset(
                       "assets/back_button.png",
-                      width: 96,
+                      width: 48,
                     ),
                   ),
                 ),
-                if (actions != null)
-                  Row(
-                    children: actions!,
-                  )
               ],
             ),
           ),
+          if (actions != null)
+            Align(
+              alignment: Alignment.topRight,
+              child: Column(
+                children: actions!,
+              ),
+            )
         ],
       ),
     );

@@ -87,18 +87,6 @@ class ShufflePuzzle extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(32),
-                        child: InkWell(
-                          onTap: () {
-                            context.read<ShufflePuzzleCubit>().toggleHelpMode();
-                          },
-                          child: Image.asset(
-                            "assets/help_button.png",
-                            width: 96,
-                          ),
-                        ),
-                      ),
                     ],
                     if (state is InProgressState)
                       Center(child: CircularProgressIndicator())

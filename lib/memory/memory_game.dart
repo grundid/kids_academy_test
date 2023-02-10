@@ -99,28 +99,33 @@ class MemoryCardWidget extends StatelessWidget {
 }
 
 class MemoryGameWidget extends StatelessWidget {
+  final int xSize = 5;
+  final int ySize = 4;
   const MemoryGameWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    print(MediaQuery.of(context).size);
+    double width = xSize * 128;
+    double height = ySize * 192 / 2;
 
     return GameScaffold(
       body: BlocProvider(
-        create: (context) => MemoryCubit(5, 4),
+        create: (context) => MemoryCubit(xSize, ySize),
         child: BlocBuilder<MemoryCubit, AppState>(
           builder: (context, state) {
             if (state is MemoryInitialized) {
               MemoryField memoryField = state.memoryField;
-              return Center(
+              return SizedBox(
+                width: width,
+                height: height,
                 child: Stack(
                   children: [
                     for (int y = 0; y < memoryField.field.length; y++)
                       for (int x = 0; x < memoryField.field[y].length; x++)
                         AnimatedPositioned(
                           duration: Duration(milliseconds: 300),
-                          top: 200 + (192 / 2) * y,
-                          left: 64 + (x * 128),
+                          top: (192 / 2) * y,
+                          left: x * 128,
                           width: 128,
                           child: MemoryCardWidget(
                             fileName: memoryField.field[y][x].fileName,
