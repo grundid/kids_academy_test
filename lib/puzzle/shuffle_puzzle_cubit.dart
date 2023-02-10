@@ -34,6 +34,12 @@ class ShufflePuzzleCubit extends Cubit<AppState> {
     _init();
   }
 
+  @override
+  Future<void> close() async {
+    audioPlayer.dispose();
+    return super.close();
+  }
+
   _init() async {
     await Future.delayed(Duration(milliseconds: 500));
     initGame();

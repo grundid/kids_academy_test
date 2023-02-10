@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learning/left_right_game.dart';
+import 'package:learning/left_right_set/left_right_game.dart';
 import 'package:learning/memory/memory_game.dart';
 import 'package:learning/puzzle/shuffle_puzzle.dart';
 import 'package:learning/puzzle/shuffle_puzzle_cubit.dart';

@@ -32,6 +32,11 @@ List<String> imageFiles = [
   "fisch_frame.jpg",
   "pferd_frame.jpg",
   "pinguine_frame.jpg",
+  "zebras_frame.jpg",
+  "waschbaer_frame.jpg",
+  "hase_frame.jpg",
+  "frosch_frame.jpg",
+  "delphine_frame.jpg",
 ];
 
 class ImageCard {
@@ -99,8 +104,8 @@ class MemoryCardWidget extends StatelessWidget {
 }
 
 class MemoryGameWidget extends StatelessWidget {
-  final int xSize = 5;
-  final int ySize = 4;
+  final int xSize = 6;
+  final int ySize = 5;
   const MemoryGameWidget({super.key});
 
   @override
@@ -108,10 +113,26 @@ class MemoryGameWidget extends StatelessWidget {
     double width = xSize * 128;
     double height = ySize * 192 / 2;
 
-    return GameScaffold(
-      body: BlocProvider(
-        create: (context) => MemoryCubit(xSize, ySize),
-        child: BlocBuilder<MemoryCubit, AppState>(
+    return BlocProvider(
+      create: (context) => MemoryCubit(xSize, ySize),
+      child: GameScaffold(
+        actions: [
+          Builder(builder: (context) {
+            return Padding(
+              padding: const EdgeInsets.all(32),
+              child: InkWell(
+                onTap: () {
+                  context.read<MemoryCubit>().reset();
+                },
+                child: Image.asset(
+                  "assets/reset_button.png",
+                  width: 48,
+                ),
+              ),
+            );
+          }),
+        ],
+        body: BlocBuilder<MemoryCubit, AppState>(
           builder: (context, state) {
             if (state is MemoryInitialized) {
               MemoryField memoryField = state.memoryField;
@@ -130,13 +151,15 @@ class MemoryGameWidget extends StatelessWidget {
                           child: MemoryCardWidget(
                             fileName: memoryField.field[y][x].fileName,
                             open: memoryField.field[y][x].open,
-                            onTap: state.playActive
-                                ? () {
-                                    context
-                                        .read<MemoryCubit>()
-                                        .toggleField(x, y);
-                                  }
-                                : null,
+                            onTap: memoryField.field[y][x].solved
+                                ? null
+                                : state.playActive
+                                    ? () {
+                                        context
+                                            .read<MemoryCubit>()
+                                            .toggleField(x, y);
+                                      }
+                                    : null,
                           ),
                         ),
                   ],
